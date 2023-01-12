@@ -1,0 +1,83 @@
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+#rotate {
+  -moz-transform: rotate(-90deg);
+  -o-transform: rotate(-90deg);
+  -webkit-transform: rotate(-90deg);
+  filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=0.083); /* IE6,IE7 */
+  -ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=0.083)";
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.textColor {
+  text-decoration: none;
+  color: #eeeeee;
+  margin: 0rem 1rem 0rem 1rem;
+}
+
+.tableSize {
+  border-collapse: collapse;
+  margin: auto;
+  margin-top: 20px;
+}
+
+.inputSize {
+  border: none;
+  width: 100%;
+}
+
+.tableSize tr td {
+  border: 1px black solid;
+  padding: 3px;
+}
+
+.containerSize {
+  margin-top: 70px;
+}
+
+.desk td {
+  font-size: 13px;
+  text-align: center;
+}
+
+.desk td input {
+  text-align: center;
+}
+
+.desk thead td {
+  text-align: center;
+  font-weight: bold;
+}
+
+.headerDesk td {
+  font-size: 15px;
+  text-align: center;
+}
+
+.headerDesk td input {
+  text-align: center;
+}
+
+.headerDesk thead td {
+  text-align: center;
+  font-weight: bold;
+}
+
+.hrStyle {
+  border: 5px dotted #0000ee;
+  border-radius: 5px;
+}

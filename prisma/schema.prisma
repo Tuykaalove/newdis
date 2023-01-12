@@ -1,0 +1,178 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model admin {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  username  String   @unique(map: "Admin_username_key")
+  hash      String
+  salt      String
+}
+
+model bagana {
+  id          Int           @id @default(autoincrement())
+  hemjee      Int
+  name        String?
+  zagvarId    Int
+  zagvar      zagvar        @relation(fields: [zagvarId], references: [id], map: "Bagana_zagvarId_fkey")
+  husnegtdata husnegtdata[]
+
+  @@index([zagvarId], map: "Bagana_zagvarId_fkey")
+}
+
+model entitydata {
+  id             Int            @id @default(autoincrement())
+  createdAt      DateTime       @default(now())
+  valueText      String?
+  valueNumber    Float?
+  colId          Int
+  tsevId         Int
+  stantsId       Int
+  tempId         Int
+  ognoo          DateTime
+  tsag           Int?
+  userId         Int
+  tsevstantscols tsevstantscols @relation(fields: [colId], references: [id], onDelete: Cascade, map: "EntityData_ibfk_2")
+  tsevstants     tsevstants     @relation(fields: [stantsId], references: [id], onDelete: Cascade, map: "EntityData_ibfk_4")
+  template       template       @relation(fields: [tempId], references: [id], onDelete: Cascade, map: "EntityData_ibfk_1")
+  tseverlekh     tseverlekh     @relation(fields: [tsevId], references: [id], onDelete: Cascade, map: "EntityData_ibfk_3")
+  entityuser     entityuser     @relation(fields: [userId], references: [id], map: "EntityData_userId_fkey")
+
+  @@index([userId], map: "EntityData_userId_fkey")
+  @@index([colId], map: "colId")
+  @@index([stantsId], map: "stantsId")
+  @@index([tempId], map: "tempId")
+  @@index([tsevId], map: "tsevId")
+}
+
+model entitynews {
+  id         Int        @id @default(autoincrement())
+  ognoo      DateTime
+  createdAt  DateTime   @default(now())
+  news       String     @db.LongText
+  userId     Int
+  entityuser entityuser @relation(fields: [userId], references: [id], map: "EntityNews_userId_fkey")
+
+  @@index([userId], map: "EntityNews_userId_fkey")
+}
+
+model entityuser {
+  id          Int             @id @default(autoincrement())
+  role        entityuser_role @default(USER)
+  createdAt   DateTime        @default(now())
+  name        String          @unique(map: "EntityUser_name_key")
+  hash        String
+  salt        String
+  nickName    String
+  sortOrder   Int             @default(0)
+  entitydata  entitydata[]
+  entitynews  entitynews[]
+  husnegtdata husnegtdata[]
+}
+
+model husnegtdata {
+  id         Int        @id @default(autoincrement())
+  createdAt  DateTime   @default(now())
+  valueText  String?
+  zagvarId   Int
+  murId      Int
+  baganaId   Int
+  ognoo      DateTime
+  userId     Int
+  bagana     bagana     @relation(fields: [baganaId], references: [id], map: "HusnegtData_baganaId_fkey")
+  mur        mur        @relation(fields: [murId], references: [id], map: "HusnegtData_murId_fkey")
+  entityuser entityuser @relation(fields: [userId], references: [id], map: "HusnegtData_userId_fkey")
+  zagvar     zagvar     @relation(fields: [zagvarId], references: [id], map: "HusnegtData_zagvarId_fkey")
+
+  @@index([baganaId], map: "HusnegtData_baganaId_fkey")
+  @@index([murId], map: "HusnegtData_murId_fkey")
+  @@index([userId], map: "HusnegtData_userId_fkey")
+  @@index([zagvarId], map: "HusnegtData_zagvarId_fkey")
+}
+
+model mur {
+  id          Int           @id @default(autoincrement())
+  name        Int?
+  sortOrder   Int           @default(0)
+  zagvarId    Int
+  zagvar      zagvar        @relation(fields: [zagvarId], references: [id], map: "Mur_zagvarId_fkey")
+  husnegtdata husnegtdata[]
+
+  @@index([zagvarId], map: "Mur_zagvarId_fkey")
+}
+
+model template {
+  id                  Int                   @id @default(autoincrement())
+  name                String?
+  slug                String                @unique(map: "Template.slug_unique")
+  entitydata          entitydata[]
+  tseverlekh          tseverlekh[]
+  tsevstantscolsgroup tsevstantscolsgroup[]
+  tsevstantscols      tsevstantscols[]      @relation("templatetotsevstantscols")
+}
+
+model tseverlekh {
+  id         Int          @id @default(autoincrement())
+  tempID     Int
+  name       String?
+  template   template     @relation(fields: [tempID], references: [id], onDelete: Cascade, map: "Tseverlekh_ibfk_1")
+  entitydata entitydata[]
+  tsevstants tsevstants[]
+
+  @@index([tempID], map: "tempID")
+}
+
+model tsevstants {
+  id         Int          @id @default(autoincrement())
+  tsevID     Int
+  niit_too   Int
+  niit_too1  Int
+  name       String?
+  sortOrder  Int          @default(0)
+  tseverlekh tseverlekh   @relation(fields: [tsevID], references: [id], onDelete: Cascade, map: "TsevStants_ibfk_1")
+  entitydata entitydata[]
+
+  @@index([tsevID], map: "tsevID")
+}
+
+model tsevstantscols {
+  id         Int          @id @default(autoincrement())
+  type       String
+  name       String?
+  hemjee     Int
+  entitydata entitydata[]
+  template   template[]   @relation("templatetotsevstantscols")
+}
+
+model tsevstantscolsgroup {
+  id       Int      @id @default(autoincrement())
+  name     String?
+  rowSpan  Int      @default(0)
+  colSpan  Int      @default(0)
+  tempId   Int
+  template template @relation(fields: [tempId], references: [id], map: "TsevStantsColsGroup_tempId_fkey")
+
+  @@index([tempId], map: "TsevStantsColsGroup_tempId_fkey")
+}
+
+model zagvar {
+  id          Int           @id @default(autoincrement())
+  name        String?
+  design      String        @unique(map: "Zagvar_design_key")
+  bagana      bagana[]
+  husnegtdata husnegtdata[]
+  mur         mur[]
+}
+
+enum entityuser_role {
+  USER
+  DIS
+  TSBA
+  BAAZ
+}
